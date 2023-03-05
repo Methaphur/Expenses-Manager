@@ -25,6 +25,17 @@ def generate_board():
     board = [[0 for i in range(len(users))] for i in range(len(users))]
     return board,users
 
+# Visually representing the Expenses
+def table_print(board,users):
+    visual_board = [row.copy() for row in board]
+    head = users[:]
+    for i in range(len(users)):
+        visual_board[i].insert(0,users[i])
+    head.insert(0," ")
+    print(tabulate(visual_board,headers=head,tablefmt="grid"))
+    print()
+
+
 # Function to input payments
 def payments(board,users):
     flag = True
@@ -44,17 +55,32 @@ def payments(board,users):
             table_print(board,users)
         else:
             flag = False
+            print()
 
-# Visually representing the Expenses
-def table_print(board,users):
-    visual_board = [row.copy() for row in board]
-    head = users[:]
-    for i in range(len(users)):
-        visual_board[i].insert(0,users[i])
-    head.insert(0," ")
-    print(tabulate(visual_board,headers=head,tablefmt="grid"))
+# Cancelling out redundant transfers
+def simplify(board,users):
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if board[row][col] > board[col][row]:
+                board[row][col] -= board[col][row]
+                board[col][row] = 0
+            else:
+                board[col][row] -= board[row][col]
+                board[row][col] = 0
+    table_print(board,users)
+
+# Printing out the final transactions in readable output 
+def final_msg(board,users):
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if board[row][col] != 0:
+                print(f'{users[row]} has to pay {users[col]} - {board[row][col]}')
+            
 
 instructions()
 board , users = generate_board()
 table_print(board,users)
 payments(board,users)
+print(f'*** Final transaction *** ')
+simplify(board,users)
+final_msg(board,users)
