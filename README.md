@@ -11,10 +11,10 @@ Enter user name : C
 Enter user name : D
 ```
 
-- Enter the user that has paid and the user paid for (`User`/`All`)
+- Enter the user that has paid and the user paid for (`User`/`All`/ `User1, User2`)
 ```
 Enter who paid (User name): A  
-Enter who all has to pay (User/All): All
+Enter who all has to pay (User / All / User1,User2): All
 Amount to be paid: 10
 ```
 
