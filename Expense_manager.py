@@ -14,7 +14,7 @@ def users_init():
     while flag:
         inp = input("Enter user name : ")
         if inp != "":
-            users.append(inp)
+            users.append(inp.strip().lower())
         else:
             flag = False
     
@@ -28,6 +28,7 @@ def generate_board():
 # Visually representing the Expenses
 def table_print(board,users):
     visual_board = [row.copy() for row in board]
+    users = [user.title() for user in users]
     head = users[:]
     for i in range(len(users)):
         visual_board[i].insert(0,users[i])
@@ -40,15 +41,28 @@ def table_print(board,users):
 def payments(board,users):
     flag = True
     while flag:
-        col = input("Enter who paid (User name): ")
+        col = input("Enter who paid (User name): ").lower()
+        if col != "" and col not in users:
+            print(f'Sorry!! {col} not in user list')
+            payments(board,users)
+            break
+
         if col != "":
-            row = input("Enter who all has to pay (User/All): ")
-            amount = int(input("Amount to be paid: "))
+            row = input("Enter who all has to pay (User /All / User1,User2): ").lower()
             col = users.index(col)
-            if row != "All":
-               row = users.index(row)
-               board[row][col] += amount 
+            if row != "all":
+                row = [user.strip().lower() for user in row.split(",")]
+                for user in row:
+                    if user not in users:   
+                        print(f"Sorry {user} not in users list")
+                        payments(board,users)
+                        break
+                amount = int(input("Amount to be paid: "))
+                for user in row:
+                    user_row = users.index(user)
+                    board[user_row][col] += amount 
             else:
+                amount = int(input("Amount to be paid: "))
                 for row in range(len(users)):
                     if row != col:
                         board[row][col] += amount
